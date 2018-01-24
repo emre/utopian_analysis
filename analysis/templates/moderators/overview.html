@@ -1,0 +1,40 @@
+    {% extends "layout.html" %}
+
+        {% block navigation%}
+    >                 	<a href="/moderators/overview">
+                    <h6 class="m-portlet__head-text" style="display: inline;">
+                        Moderator Overview
+					</h6>
+                    </a>
+    {% endblock %}
+
+
+    {% block content %}
+    <form>
+
+
+    <div class="m-portlet__head-tools">
+        <form method="GET">
+        Category
+        <select class="form-control" name="category" style="width: 10%; display:inline;">
+              {% for category in categories %}
+              <option{% if selected_category==category%} selected="selected"{%endif%}>{{category}}</option>
+              {% endfor %}
+         </select>
+
+        Moderator
+        <select class="form-control" name="moderator" style="width: 10%; display:inline;">
+              {% for moderator in moderators %}
+              <option{% if selected_moderator==moderator%} selected="selected"{%endif%}>{{moderator}}</option>
+              {% endfor %}
+         </select>
+         <input type="submit" class="form-control" style="width: 10%; display: inline;" value="Filter">
+    </form>
+
+    </div>
+
+
+    <div id="chart" style="margin-top:20px;">
+       <embed type="image/svg+xml" src= {{ chart|safe }} />
+    </div>
+    {% endblock %}e
