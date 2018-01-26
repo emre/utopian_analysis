@@ -59,6 +59,12 @@ def moderator_overview():
     moderator = request.args.get("moderator")
     category = request.args.get("category")
 
+    if category == "all":
+        category = ""
+
+    if moderator == "all":
+        moderator = ""
+
     chart = analyzer.plot_overview(
         moderator, category, group_by="moderator").render_data_uri()
 
