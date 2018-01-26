@@ -3,8 +3,6 @@ import logging
 
 import pygal
 
-from .client import Client
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logging.basicConfig()
@@ -18,47 +16,11 @@ def get_percent(dictionary, s):
 class Analyzer(object):
 
     def __init__(self, mongo_conn):
-        self.client = Client()
         self.mongo_conn = mongo_conn
         self.database = self.mongo_conn["utopian_analysis"]
         self.posts = self.database["posts"]
         self.categories = self.database["categories"]
         self.moderators = self.database["moderators"]
-
-    def fetch_recursive(self, limit=1000, skip=0, post_list=None, hidden=False):
-        if post_list is None:
-            post_list = []
-
-        query = {
-            "skip": skip,
-            "limit": limit,
-        }
-
-        if hidden:
-            query["status"] = "flagged"
-
-        approved_posts = self.client.posts(query)
-        for post in approved_posts["results"]:
-            self.posts.update(
-                {"_id": post["_id"]}, post, upsert=True)
-
-        if skip + limit < approved_posts["total"]:
-            logger.info(
-                "New iteration. skip:%s, limit:%s",
-                skip,
-                limit
-            )
-            return self.fetch_recursive(
-                limit=limit,
-                skip=skip+limit,
-                post_list=post_list,
-                hidden=hidden)
-
-    def fetch_approved_posts(self):
-        self.fetch_recursive()
-
-    def fetch_hidden_posts(self):
-        self.fetch_recursive(hidden=True)
 
     def get_moderator_leaderboard(self, category, status, group_by):
         return self.get_moderator_data(category, status, group_by=group_by)
@@ -159,25 +121,6 @@ class Analyzer(object):
             hidden = 0
         return total, approved, hidden
 
-    def fetch_categories(self):
-        categories = set()
-        for post in self.posts.find({}):
-            category = post.get("json_metadata").get("type", {})
-            if category:
-                categories.add(category)
-
-        for category in categories:
-            self.categories.update(
-                {"name": category}, {"name": category},
-                upsert=True)
-
-        logger.info(categories)
-
-    def fetch_moderators(self):
-        for moderator in self.client.moderators["results"]:
-            self.moderators.update(
-                {"account": moderator["account"]}, moderator, upsert=True)
-
     def plot_leaderboard(self, category, status, group_by):
         line_chart = pygal.Bar()
         actors = "moderators"
@@ -246,7 +189,3 @@ class Analyzer(object):
 
     def get_statuses(self):
         return ["hidden", "approved"]
-
-    def run(self):
-        self.fetch_approved_posts()
-        self.fetch_hidden_posts()

@@ -16,7 +16,7 @@ def moderator_leaderboard():
         status = request.args["review_status"]
 
     chart = analyzer.plot_leaderboard(
-        category, status
+        category, status, group_by="moderator"
     ).render_data_uri()
 
     return render_template(
@@ -91,3 +91,8 @@ def contributor_overview():
         contributors=[contributor, ],
         selected_contributor=contributor,
     )
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")

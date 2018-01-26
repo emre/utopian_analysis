@@ -1,0 +1,28 @@
+    {% extends "layout.html" %}
+
+
+
+    {% block content %}
+
+
+    <div class="m-portlet__head-tools">
+		<h5>Moderators</h5>
+		<ul>
+			<li><a href="/moderators/leaderboard">Leaderboard</a></li>
+			<li><a href="/moderators/overview">Overview</a></li>
+		</ul>
+		<hr>
+    </div>
+
+	    <div class="m-portlet__head-tools">
+		<h5>Contributors</h5>
+		<ul>
+			<li><a href="/contributors/leaderboard">Leaderboard</a></li>
+			<li><a href="/contributors/overview/?contributor=redjepi">Overview of @redjepi</a> (Change it via URL.)</li>
+		</ul>
+		<hr>
+    </div>
+
+
+
+    {% endblock %}e
