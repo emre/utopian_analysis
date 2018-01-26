@@ -17,7 +17,7 @@ class Analyzer(object):
 
     def __init__(self, mongo_conn):
         self.mongo_conn = mongo_conn
-        self.database = self.mongo_conn["utopian_analysis"]
+        self.database = self.mongo_conn["utopiandata"]
         self.posts = self.database["posts"]
         self.categories = self.database["categories"]
         self.moderators = self.database["moderators"]
