@@ -17,5 +17,5 @@ All set.
 
 #### Fetching/Syncing the data
 
-Use [utopian_data](github.com/emre/utopian_data).
+Use [utopian_data](https://github.com/emre/utopian_data).
 
